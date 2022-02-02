@@ -1,5 +1,8 @@
 
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
+import 'package:news_link/Component/customListTile.dart';
 import 'package:news_link/service/api_service.dart';
 import "dart:io";
 
@@ -37,11 +40,12 @@ class _HomePageState extends State<HomePage> {
       body: FutureBuilder(
         future: client.getArticle(),
         builder: (BuildContext context,AsyncSnapshot<List<Article>> snapshot){
+         log(snapshot.data.toString());
           if(snapshot.hasData){
             List<Article>? articles = snapshot.data;
             return ListView.builder(
               itemCount: articles?.length,
-              itemBuilder: (context,index) => ListTile(title: Text(articles![index].title),),
+              itemBuilder: (context,index) => customListTile(articles![index])
             );
           }
           return const Center(
