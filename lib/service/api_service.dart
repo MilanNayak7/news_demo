@@ -17,7 +17,7 @@ class ApiService {
     List<dynamic> body = json['articles'];
   //  log(body.toString());
     List<Article> articles = body.map((dynamic item) => Article.fromJson(item)).toList();
-   log(articles.length.toString());
+  // log(articles.length.toString());
     return articles;
 
 
