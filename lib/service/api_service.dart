@@ -8,7 +8,7 @@ import 'package:flutter/foundation.dart';
 class ApiService {
 
   final client = http.Client();
-  final endPoint = "https://newsapi.org/v2/top-headlines?country=us&category=business&apiKey=d5a82e8ff0064231bd6500ba039c7289";
+  final endPoint = "https://newsapi.org/v2/everything?domains=wsj.com&apiKey=d5a82e8ff0064231bd6500ba039c7289";
   Future<List<Article>> getArticle({String? query}) async {
 
     final response = await client.get(Uri.parse(endPoint));
