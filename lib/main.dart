@@ -1,15 +1,18 @@
-
 import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:news_link/Component/customListTile.dart';
+import 'package:news_link/Component/sourceTab.dart';
+import 'package:news_link/model/source_model.dart';
 import 'package:news_link/search/SearchNews.dart';
 import 'package:news_link/service/api_service.dart';
 import "dart:io";
 
 import 'model/article_model.dart';
+
 void main() {
   runApp(const MyApp());
 }
+
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
 
@@ -20,13 +23,14 @@ class MyApp extends StatelessWidget {
     );
   }
 }
+
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
-
 
   @override
   _HomePageState createState() => _HomePageState();
 }
+
 class _HomePageState extends State<HomePage> {
   ApiService client = ApiService();
 
@@ -46,18 +50,17 @@ class _HomePageState extends State<HomePage> {
                 icon: const Icon(Icons.search_sharp),
               )
             ],
-            bottom: const TabBar(tabs: [
-             Tab(
-            icon:Icon(Icons.source)
-             ),
-              Tab(icon:Icon(Icons.article),),
-            ],),
+            bottom: const TabBar(
+              tabs: [
+                Tab(icon: Icon(Icons.source)),
+                Tab(
+                  icon: Icon(Icons.article),
+                ),
+              ],
+            ),
           ),
           body: TabBarView(
-            children: [
-             ListWidget(client: client),
-              Text("Second Tab"),
-            ],
+            children: [ListWidget(client: client), SourceTab(client: client)],
           ),
         ),
       ),
@@ -66,8 +69,8 @@ class _HomePageState extends State<HomePage> {
 }
 
 class ListWidget extends StatefulWidget {
- final ApiService client;
-  const ListWidget({Key? key,required this.client}) : super(key: key);
+  final ApiService client;
+  const ListWidget({Key? key, required this.client}) : super(key: key);
 
   @override
   _ListWidgetState createState() => _ListWidgetState();
@@ -76,16 +79,46 @@ class ListWidget extends StatefulWidget {
 class _ListWidgetState extends State<ListWidget> {
   @override
   Widget build(BuildContext context) {
-    return  FutureBuilder(
-      future:widget.client.getArticle(),
-      builder: (BuildContext context,AsyncSnapshot<List<Article>> snapshot){
-        log(snapshot.data.toString());
-        if(snapshot.hasData){
+    return FutureBuilder(
+      future: widget.client.getArticle(),
+      builder: (BuildContext context, AsyncSnapshot<List<Article>> snapshot) {
+        //   log(snapshot.data.toString());
+        if (snapshot.hasData) {
           List<Article>? articles = snapshot.data;
           return ListView.builder(
               itemCount: articles?.length,
-              itemBuilder: (context,index) => customListTile(articles![index],context)
-          );
+              itemBuilder: (context, index) =>
+                  customListTile(articles![index], context));
+        }
+        return const Center(
+          child: CircularProgressIndicator(),
+        );
+      },
+    );
+  }
+}
+
+class SourceTab extends StatefulWidget {
+  final ApiService client;
+  const SourceTab({Key? key, required this.client}) : super(key: key);
+
+  @override
+  _SourceTabState createState() => _SourceTabState();
+}
+
+class _SourceTabState extends State<SourceTab> {
+  @override
+  Widget build(BuildContext context) {
+    return FutureBuilder(
+      future: widget.client.getArticleSource(),
+      builder: (BuildContext context, AsyncSnapshot<List<Source>> snapshot) {
+        //   log(snapshot.data.toString());
+        if (snapshot.hasData) {
+          List<Source>? articles = snapshot.data;
+          return ListView.builder(
+              itemCount: articles?.length,
+              itemBuilder: (context, index) =>
+                  customSourceListTile(articles![index], context));
         }
         return const Center(
           child: CircularProgressIndicator(),
