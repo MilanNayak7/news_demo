@@ -1,15 +1,18 @@
 import 'dart:developer';
 import 'package:flutter/material.dart';
+import 'package:hive/hive.dart';
 import 'package:news_link/Component/customListTile.dart';
 import 'package:news_link/Component/sourceTab.dart';
 import 'package:news_link/model/source_model.dart';
 import 'package:news_link/search/SearchNews.dart';
 import 'package:news_link/service/api_service.dart';
 import "dart:io";
-
+import 'package:path_provider/path_provider.dart' as path_provider;
 import 'model/article_model.dart';
 
-void main() {
+void main() async{
+  final appDocumentDirectory  =await path_provider.getApplicationDocumentsDirectory();
+  Hive.init(appDocumentDirectory.path);
   runApp(const MyApp());
 }
 
